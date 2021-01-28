@@ -110,13 +110,13 @@ func (g *globList) Matches(value string) bool {
 
 var (
 	flagPattern         = flag.String("pattern", FilePattern, "Pattern of watched files")
-	flagCommand         = flag.String("command", "", "Command to run and restart after build")
+	flagCommand         = flag.String("command", "go run .", "Command to run and restart after build")
 	flagCommandStop     = flag.Bool("command-stop", false, "Stop command before building")
 	flagRecursive       = flag.Bool("recursive", true, "Watch all dirs. recursively")
-	flagBuild           = flag.String("build", "go build", "Command to rebuild after changes")
+	flagBuild           = flag.String("build", "", "Command to rebuild after changes")
 	flagBuildDir        = flag.String("build-dir", "", "Directory to run build command in.  Defaults to directory")
 	flagRunDir          = flag.String("run-dir", "", "Directory to run command in.  Defaults to directory")
-	flagColor           = flag.Bool("color", false, "Colorize output for CompileDaemon status messages")
+	flagColor           = flag.Bool("color", true, "Colorize output for CompileDaemon status messages")
 	flagLogPrefix       = flag.Bool("log-prefix", true, "Print log timestamps and subprocess stderr/stdout output")
 	flagGracefulKill    = flag.Bool("graceful-kill", false, "Gracefully attempt to kill the child process by sending a SIGTERM first")
 	flagGracefulTimeout = flag.Uint("graceful-timeout", 3, "Duration (in seconds) to wait for graceful kill to complete")
@@ -152,7 +152,7 @@ func build() bool {
 	log.Println(okColor("Running build command!"))
 
 	args := strings.Split(*flagBuild, " ")
-	if len(args) == 0 {
+	if len(args) == 0 || args[0] == "" {
 		// If the user has specified and empty then we are done.
 		return true
 	}
